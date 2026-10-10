@@ -109,3 +109,7 @@ The course required students to use AI tools during the project. They were used 
 
 *   [semester-project-report.pdf](semester-project-report.pdf): the full project report (design, implementation, and results for every debug mode).
 *   [project-spring-2024-v2.pdf](project-spring-2024-v2.pdf): the assignment specification.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
