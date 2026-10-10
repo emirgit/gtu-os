@@ -1,0 +1,115 @@
+# Bubble Sort Program for GTU-C312 CPU
+# Sorts an array of 10 numbers in ascending order
+
+Begin Data Section
+0 0     # program counter
+1 19999 # stack pointer
+2 0     # syscall result
+3 0     # instruction count
+4 0     # reserved
+5 0     # reserved
+6 0     # reserved
+7 0     # reserved
+8 0     # reserved
+9 0     # reserved
+10 0    # reserved
+11 0    # reserved
+12 0    # reserved
+13 0    # reserved
+14 0    # reserved
+15 0    # reserved
+16 0    # reserved
+17 0    # reserved
+18 0    # reserved
+19 0    # reserved
+20 0    # reserved
+# Variables for bubble sort
+50 10   # N (array size)
+51 0    # i (outer loop counter)
+52 0    # j (inner loop counter)
+53 0    # temp1
+54 0    # temp2
+55 0    # temp3
+56 0    # temp4
+57 0    # temp5
+58 0    # temp6
+59 0    # temp7
+# Array to sort (10 elements starting at address 60)
+60 45   # arr[0]
+61 23   # arr[1]
+62 67   # arr[2]
+63 12   # arr[3]
+64 89   # arr[4]
+65 34   # arr[5]
+66 56   # arr[6]
+67 78   # arr[7]
+68 90   # arr[8]
+69 11   # arr[9]
+End Data Section
+
+Begin Instruction Section
+# Initialize i = 0
+0 SET 0 51              # i = 0
+
+# Outer loop: while i < N-1
+1 CPY 50 53             # temp1 = N
+2 ADD 53 -1             # temp1 = N - 1
+3 CPY 53 54             # temp2 = N - 1 (save)
+4 CPY 51 55             # temp3 = i
+5 SUBI 54 55            # temp3 = (N-1) - i
+6 JIF 55 40             # if (N-1)-i <= 0, exit to print
+
+# Initialize j = 0
+7 SET 0 52              # j = 0
+
+# Inner loop: while j < N-i-1
+8 CPY 50 53             # temp1 = N
+9 CPY 51 54             # temp2 = i
+10 SUBI 53 54           # temp2 = N - i
+11 ADD 54 -1            # temp2 = N - i - 1
+12 CPY 54 55            # temp3 = N - i - 1 (save)
+13 CPY 52 56            # temp4 = j
+14 SUBI 55 56           # temp4 = (N-i-1) - j
+15 JIF 56 36            # if (N-i-1)-j <= 0, inner done
+
+# Calculate address of arr[j]
+16 SET 60 57            # temp5 = 60 (array base)
+17 ADDI 52 57           # temp5 = 60 + j (address of arr[j])
+
+# Get arr[j] and arr[j+1]
+18 CPYI 57 53           # temp1 = arr[j] value
+19 ADD 57 1             # temp5 = address of arr[j+1]
+20 CPYI 57 54           # temp2 = arr[j+1] value
+
+# Compare arr[j] > arr[j+1]
+21 CPY 54 55            # temp3 = arr[j+1]
+22 CPY 53 56            # temp4 = arr[j]
+23 SUBI 56 55           # temp3 = arr[j] - arr[j+1]
+24 JIF 55 33            # if arr[j]-arr[j+1] <= 0, skip swap
+
+# Swap arr[j] and arr[j+1]
+# Calculate arr[j] address again
+25 SET 60 57            # temp5 = 60 (base)
+26 ADDI 52 57           # temp5 = 60 + j (address of arr[j])
+
+# Store arr[j+1] value at arr[j]
+27 CPY 54 58            # temp6 = arr[j+1] value
+28 SET 58 59            # temp7 = 58 (address containing value)
+29 CPYI2 59 57          # mem[arr[j]] = arr[j+1]
+
+# Store arr[j] value at arr[j+1]
+30 ADD 57 1             # temp5 = address of arr[j+1]
+31 SET 53 59            # temp7 = 53 (address containing arr[j] value)
+32 CPYI2 59 57          # mem[arr[j+1]] = arr[j]
+
+# Continue inner loop
+33 ADD 52 1             # j++
+34 SET 8 0              # Jump to inner loop check
+
+# Inner loop done
+36 ADD 51 1             # i++
+37 SET 1 0              # Jump to outer loop check
+
+# Sorting complete - array is now sorted in memory locations 60-69
+40 HLT                  # End program
+End Instruction Section

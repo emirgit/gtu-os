@@ -1,0 +1,243 @@
+# GTU-C312 Operating System - CORRECTED VERSION
+# This OS implements thread management, round-robin scheduling, and system call handling
+
+Begin Data Section
+# === CPU Registers (0-20) ===
+0 21        # PC - Start at OS entry point
+1 19999     # SP - Stack pointer (top of memory)
+2 0         # System call result
+3 0         # Instruction count
+4 0         # SYSCALL PC saving address for threads
+5 0         # Reserved
+6 0         # Reserved
+7 0         # Reserved
+8 0         # Reserved
+9 0         # Reserved
+10 0        # Temporary storage 1
+11 0        # Temporary storage 2
+12 0        # Temporary storage 3
+13 0        # Temporary storage 4
+14 0        # Temporary storage 5
+15 0        # Temporary storage 6
+16 0        # Input Variable 1 - Thread ID for context switch
+17 0        # Input variable 2 - New state for thread (1=READY, 3=BLOCKED, 4=TERMINATED)
+18 0        # Return Variable 1 - Jump address for context switch
+19 0        # Return Variable 2
+20 0        # Reserved
+
+# === OS Memory Area (21-999) ===
+# --- OS Variables (21-99) ---
+21 0        # Current thread ID (0 = OS)
+22 10        # Number of active threads
+23 0        # Scheduler state (0=init, 1=running)
+24 0        # System timer/cycle counter
+25 0        # Context switch counter
+26 0        # Blocked thread counter
+27 1        # Next thread to check (for round-robin) - start with thread 1
+28 0        # Temp for saving registers during context switch
+29 0        # Temp for calculations
+30 0        # Thread search counter
+31 11       # Maximum number of threads (0 - 10 included) 
+32 80       # Thread entry size
+33 100      # Thread base offset
+34 0        # Last thread execution start 
+35 0        # Instruction count of the last executed thread
+
+# --- Thread Table (100-979) ---
+# Thread structure (80 bytes each):
+# Offset 0: Thread ID
+# Offset 1: State (1=READY, 2=RUNNING, 3=BLOCKED, 4=HALTED)
+# Offset 2: PC
+# Offset 3: SP
+# Offset 4: First execution time (when thread first ran)
+# Offset 5: Last start time (when last context switched to)
+# Offset 6: Total executed instructions
+# Offset 7: IC of the last executed instruction
+# Offset 8: Block duration (for BLOCKED threads)
+# Offset 9-79: Reserved for future use
+
+# Thread 0 (OS) - 100-179
+100 0       # Thread ID = 0 (OS)
+101 2       # State = RUNNING
+102 21      # PC (OS start)
+103 19999   # SP
+104 0       # First execution time 
+105 0       # Last start time [USED TO TRACK 34 - 35 means total thread usage]
+106 0       # Total executed instructions [Total OS usagae]
+107 0       # IC of the last executed instruction  [NOT USED FOR OS THREAD]
+108 0       # Block duration
+# 109-179 Reserved
+
+# This tables will be initiliazed by the OS
+# Thread 1 - 180-259
+
+
+# Thread 2 - 260-339
+
+
+# Thread 3 - 340-419
+
+
+# Threads 4-10 (420-979)
+
+
+# === Thread Memory Areas (1000+) ===
+# Thread 1 Data (1000-1999) - Bubble Sort
+# 1000 is instruction start, data starts from 1001
+1001 10     # N for sorting
+1002 45     # arr[0]
+1003 23     # arr[1]
+1004 67     # arr[2]
+1005 12     # arr[3]
+1006 89     # arr[4]
+1007 34     # arr[5]
+1008 56     # arr[6]
+1009 78     # arr[7]
+1010 90     # arr[8]
+1011 11     # arr[9]
+1012 0      # i (outer loop counter for sort)
+1013 0      # j (inner loop counter for sort)
+1014 0      # temp1 (for sort)
+1015 0      # temp2 (for sort)
+1016 0      # temp3 (for sort comparison result)
+1017 0      # temp4 (for sort)
+1018 0      # temp5_addr_ptr (for sort)
+1019 0      # temp6_val_holder (for sort swap)
+1020 0      # temp7_addr_of_val (for sort CPYI2)
+1021 0      # always_zero_for_jumps (value: 0)
+1022 0      # print_loop_count (value: N down to 1 for print loop)
+1023 0      # current_array_offset_for_print (value: 0 up to N-1 for print loop)
+1024 0      # ptr_for_prn (holds address of current array element for SYSCALL PRN)
+1025 0      # temp_extra5 (available)
+
+# Thread 2 Data (2000-2999) - Linear Search
+# --- Thread 2 Data (2000-2999) - Linear Search ---
+# 2000 is instruction start for Thread 2
+# Variables for Linear Search (Thread 2)
+2000 0      # I (counter for linear search)
+2001 -1     # RESULT (default -1)
+2002 0      # TEMP_CURRENT_ADDR
+2003 0      # TEMP_CURRENT_VAL
+2004 0      # TEMP1 (general temp for SUBI src, conditions)
+2005 0      # TEMP2 (general temp for SUBI dest, conditions)
+2006 0      # always_zero_for_jumps_t2
+2007 0      # (available temp)
+2008 0      # (available temp)
+2009 0      # (available temp)
+2010 0      # (available temp)
+2011 0
+2012 0
+2013 0
+2014 0
+2015 0
+2016 0
+2017 0
+2018 0
+2019 0
+2020 8      # N (array size for linear search)
+2021 42     # KEY (value to search for)
+2022 2023   # ARRAY_BASE_VALUE (actual start address of array data below)
+2023 10     # array_t2[0]
+2024 25     # array_t2[1]
+2025 42     # array_t2[2] <- KEY should be found here
+2026 67     # array_t2[3]
+2027 89     # array_t2[4]
+2028 33     # array_t2[5]
+2029 42     # array_t2[6]
+2030 55     # array_t2[7]
+
+# Thread 3 Data (3000-3999) - Fibonacci Sequence
+3000 0      # Reserved for thread PC
+3001 10     # How many Fibonacci numbers to calculate (N)
+3002 0      # Counter
+3003 0      # Fib(n-2) 
+3004 1      # Fib(n-1)
+3005 0      # Current Fib(n) - value to print
+3006 0      # print_ptr (points to address of current_fib for SYSCALL PRN)
+3007 0      # temp1 (for calculations)
+3008 0      # temp2 (for calculations)
+3009 0      # always_zero (for unconditional jumps)
+3010 0      # temp3
+3011 0      # temp4
+3012 0      # temp5
+
+
+
+End Data Section
+
+Begin Instruction Section
+# === OS Code Section (21-999) ===
+
+# OS Entry Point (21)
+21 SET 1 10             # thread_id counter = 1 (use temp storage M[10])
+22 CPY 31 11            # max_thread_id = 10 (use temp storage M[11])
+
+# Thread initialization loop (23)
+23 CPY 10 12            # Copy current thread_id to M[12]
+24 CPY 11 13            # Copy max_thread_id to M[13] 
+25 SUBI 13 12           # max_thread_id - current_thread_id
+26 JIF 12 68            # If current_thread_id - max_thread_id > 0, done with init
+                        # 12 = 10 => 11 - 10 = 1 [Thus, it will continue if thread is 10]
+
+# Calculate thread table base address: 100 + (thread_id * 80)
+27 CPY 32 13            # M[13] = thread entry size (80)
+28 SET 0 14             # M[14] = accumulator = 0
+29 ADDI 33 14           # M[14] = base offset (100)
+30 CPY 10 15            # M[15] = thread_id for multiplication
+
+# Multiply thread_id by 80
+31 JIF 15 35            # If multiplier is 0, done
+32 ADDI 13 14           # Add 80 to accumulator
+33 ADD 15 -1            # Decrement multiplier
+34 SET 31 0             # Jump back to multiply loop
+
+# Store thread table entry
+35 CPY 10 16            # M[16] = thread_id value to store
+36 SET 16 17            # M[17] = address of thread_id value (16)
+37 CPYI2 17 14          # Store thread_id at base_addr + 0
+
+# Store the state
+38 ADD 14 1             # Point to state offset (base_addr + 1)
+39 SET 1 16             # M[16] = state value (1 = READY)
+40 CPYI2 17 14          # Store state
+
+# Calculate the PC
+41 ADD 14 1             # Point to PC offset (base_addr + 2)
+42 SET 1000 16          # M[16] = 1000
+43 CPY 10 18            # M[18] = thread_id
+44 SET 0 19             # M[19] = accumulator for PC calculation
+45 JIF 18 49            # If thread_id is 0, PC calculation done
+46 ADDI 16 19           # Add 1000 to accumulator
+47 ADD 18 -1            # Decrement thread_id
+48 SET 45 0             # Jump back to PC calculation loop
+49 CPY 19 16            # M[16] = calculated PC (thread_id * 1000)
+50 CPYI2 17 14          # Store PC
+
+# Calculate the SP
+51 ADD 14 1             # Point to SP offset (base_addr + 3)
+52 CPY 19 16            # M[16] = PC value
+53 ADD 16 999           # M[16] = PC + 999 (SP value)
+54 CPYI2 17 14          # Store SP
+
+# Initialize remaining fields to 0 (first exec, last start, total exec, last IC, block duration)
+55 ADD 14 1             # Point to first execution time (base_addr + 4)
+56 SET 0 16             # M[16] = 0
+57 CPYI2 17 14          # Store 0
+58 ADD 14 1             # Point to last start time (base_addr + 5)
+59 CPYI2 17 14          # Store 0
+60 ADD 14 1             # Point to total executed (base_addr + 6)
+61 CPYI2 17 14          # Store 0
+62 ADD 14 1             # Point to last IC (base_addr + 7)
+63 CPYI2 17 14          # Store 0
+64 ADD 14 1             # Point to block duration (base_addr + 8)
+65 CPYI2 17 14          # Store 0
+
+# Continue to next thread
+66 ADD 10 1             # Increment thread_id
+67 SET 23 0             # Jump back to initialization loop
+
+# Thread table initialization complete
+68 SET 1 23             # Set scheduler state to running
+69 SET 100 0            # Jump to scheduler
+
+End Instruction Section
